@@ -11,7 +11,8 @@ const player = {
 };
 
 const enemies = [];
-let score = 0;  // Initialize the score
+let score = 0;
+let isPaused = false;
 
 function createEnemy() {
     const enemy = {
@@ -40,7 +41,15 @@ function drawScore() {
     context.fillText(`Score: ${score}`, canvas.width - 100, 30);
 }
 
+function drawPauseButton() {
+    context.fillStyle = '#FFF';
+    context.font = '24px Arial';
+    context.fillText('Pause', 10, 30);
+}
+
 function update() {
+    if (isPaused) return;
+
     // Clear the canvas
     context.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -49,6 +58,9 @@ function update() {
 
     // Draw the score
     drawScore();
+
+    // Draw the pause button
+    drawPauseButton();
 
     // Move and draw bullets
     player.bullets.forEach((bullet, index) => {
@@ -79,7 +91,7 @@ function update() {
             ) {
                 enemies.splice(eIndex, 1);
                 player.bullets.splice(bIndex, 1);
-                score++;  // Increment the score when an enemy is hit
+                score++;
             }
         });
     });
@@ -94,6 +106,8 @@ function update() {
 
 // Handling keyboard inputs
 window.addEventListener('keydown', (e) => {
+    if (isPaused) return;
+
     switch (e.key) {
         case 'ArrowUp':
             player.y -= player.speed;
@@ -116,6 +130,19 @@ window.addEventListener('keydown', (e) => {
                 speed: 10,
             });
             break;
+    }
+});
+
+// Handling mouse click for pause
+canvas.addEventListener('click', function(event) {
+    const x = event.clientX - canvas.getBoundingClientRect().left;
+    const y = event.clientY - canvas.getBoundingClientRect().top;
+    if (x >= 10 && x <= 80 && y >= 10 && y <= 40) {
+        isPaused = !isPaused;
+        if (isPaused) {
+            alert(`Game Paused. Your current score is: ${score}`);
+        }
+        update();
     }
 });
 
