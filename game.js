@@ -11,6 +11,7 @@ const player = {
 };
 
 const enemies = [];
+let score = 0;  // Initialize the score
 
 function createEnemy() {
     const enemy = {
@@ -33,12 +34,21 @@ function drawBullet(bullet) {
     context.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
 }
 
+function drawScore() {
+    context.fillStyle = '#FFF';
+    context.font = '24px Arial';
+    context.fillText(`Score: ${score}`, canvas.width - 100, 30);
+}
+
 function update() {
     // Clear the canvas
     context.clearRect(0, 0, canvas.width, canvas.height);
 
     // Draw the player
     drawAircraft(player);
+
+    // Draw the score
+    drawScore();
 
     // Move and draw bullets
     player.bullets.forEach((bullet, index) => {
@@ -69,6 +79,7 @@ function update() {
             ) {
                 enemies.splice(eIndex, 1);
                 player.bullets.splice(bIndex, 1);
+                score++;  // Increment the score when an enemy is hit
             }
         });
     });
